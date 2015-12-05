@@ -1,5 +1,17 @@
-Asset Name, Assigned To, Owner, Due Date, Status, Notes
-Bear, Juan, Liz, 2015-04-13, Not Finished, None
-Water, Juan, Sam, 2015-04-13, Not Finished, None
-Noodles, Juan, Austin, 2015-04-13, Not Finished, None
-Phone, Juan, Carlos, 2015-04-13, Not Finished, None
+Asset Name,Owner,Status,Notes,Due Date,Requester
+tree,Bob,incomplete,needs texture,11/30/15,Steve
+rock,Bob,complete,,1/30/16,f
+cup,Jen,in progress,fixing issue,12/6/15,Jessica
+plate,Jen,in progress,corrupted,11/30/15,Anna
+fork,Jen,incomplete,,1/30/16,Jessica
+knife,Jen,incomplete,needs texture,12/6/15,Leo
+wall1,Cate,complete,needs work,12/6/15,Steve
+table,Jen,cancelled,bump map done,12/6/15,Leo
+bush,Bob,cancelled,missing depth map,11/30/15,Anna
+chair,Jen,reassigned,missing depth map,12/6/15,Anna
+spoon,Jen,in progress,needs work,2/15/16,Steve
+wall2,Cate,incomplete,approved,12/6/15,Steve
+wall3,Cate,in progress,approved,1/30/16,Jessica
+hammer,David,complete,texture missing,2/15/16,Anna
+rug,Lisa,incomplete,almost done!,12/6/15,Jessica
+nail,David,incomplete,fixing,2/15/16,Steve

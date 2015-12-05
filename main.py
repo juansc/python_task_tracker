@@ -1,4 +1,4 @@
-from PyQt4 import QtGui  # Import the PyQt4 module we'll need
+from PyQt4 import QtCore, QtGui  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
 import design  # This file holds our MainWindow and all design related things
 import csv
@@ -27,6 +27,7 @@ class taskNotification(QtGui.QMainWindow, design.Ui_MainWindow):
         self.setup_table()
 
     def setup_table(self):
+        num_of_cols = 6
         tasks = []
         with open('tool_files.csv', 'rb') as csvfile:
             file_reader = csv.reader(csvfile, delimiter=',')
@@ -36,10 +37,19 @@ class taskNotification(QtGui.QMainWindow, design.Ui_MainWindow):
         number_of_tasks = len(tasks) - 1
         self.table.setRowCount(number_of_tasks)
         for row in range(1, number_of_tasks + 1):
-            for col in range(0, number_of_tasks):
+            for col in range(0, num_of_cols):
                 item = QtGui.QTableWidgetItem()
                 self.table.setItem(row - 1, col, item)
                 item.setText(_translate("MainWindow", tasks[row][col], None))
+
+        disabled_columns = [0, 1, 4, 5]
+
+        for row in range(0, number_of_tasks):
+            for col in disabled_columns:
+                item = self.table.item(row, col)
+                item.setFlags(QtCore.Qt.ItemIsEnabled)
+
+
 
 
 
