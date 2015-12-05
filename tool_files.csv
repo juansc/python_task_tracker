@@ -1,1 +1,5 @@
-Asset Name,Owner,Status,Notes,Due Date,Requester
+Asset Name, Assigned To, Owner, Due Date, Status, Notes
+Bear, Juan, Liz, 2015-04-13, Not Finished, None
+Water, Juan, Sam, 2015-04-13, Not Finished, None
+Noodles, Juan, Austin, 2015-04-13, Not Finished, None
+Phone, Juan, Carlos, 2015-04-13, Not Finished, None
