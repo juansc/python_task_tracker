@@ -1,6 +1,6 @@
 from PyQt4 import QtCore, QtGui  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
-import task_viewer  # This file holds our MainWindow and all design related things
+import task_viewer, email_window  # This file holds our MainWindow and all design related things
 import csv
 from operator import itemgetter
 # it also keeps events etc that we defined in Qt Designer
@@ -28,6 +28,7 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         self.setup_table()
         self.setup_connections()
         self.table.cellChanged.connect(self.data_has_been_changed)
+        self.newWindow = None
 
     def setup_connections(self):
         self.table.cellChanged.connect(self.data_has_been_changed)
@@ -110,8 +111,21 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
 
     def send_email(self):
-        print "Pop up window should appear"
+        self.newWindow = emailWindow()
+        self.newWindow.show()
 
+class emailWindow(QtGui.QMainWindow, email_window.Ui_sendEmail):
+    def __init__(self):
+        super(self.__class__, self).__init__()
+        self.setupUi(self)
+        self.setup_connections()
+
+    def setup_connections(self):
+        self.send_btn.clicked.connect(self.send_email)
+        self.dont_send_btn.clicked.connect(self.close)
+
+    def send_email(self):
+        print "We sent the following email."
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
