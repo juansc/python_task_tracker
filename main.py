@@ -1,7 +1,8 @@
 from PyQt4 import QtCore, QtGui  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
-import design  # This file holds our MainWindow and all design related things
+import task_viewer  # This file holds our MainWindow and all design related things
 import csv
+from operator import itemgetter
 # it also keeps events etc that we defined in Qt Designer
 import os  # For listing directory methods
 
@@ -14,7 +15,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
-class taskNotification(QtGui.QMainWindow, design.Ui_MainWindow):
+class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
     def __init__(self):
         self.data = []
         self.modified_rows = []
@@ -105,16 +106,16 @@ class taskNotification(QtGui.QMainWindow, design.Ui_MainWindow):
                 row_data.append(str(self.table.item(row, col).text()))
             data.append(row_data)
 
-        print data
         return data
 
 
     def send_email(self):
         print "Pop up window should appear"
 
+
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    form = taskNotification()  # We set the form to be our stringFinder (design)
+    form = taskNotification()  # We set the form to be our mainWindow (design)
     form.show()  # Show the form
     app.exec_()  # and execute the app
 
