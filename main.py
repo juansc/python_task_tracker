@@ -18,45 +18,24 @@ except AttributeError:
 class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
     def __init__(self):
         self.data = []
-        self.modified_rows = []
         self.csv_file = 'tool_files.csv'
-        self.target_file = 'test.csv'
+        self.email_window = None
 
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
 
         self.setup_table()
         self.setup_connections()
-        self.table.cellChanged.connect(self.data_has_been_changed)
-        self.newWindow = None
+
 
     def setup_connections(self):
         self.table.cellChanged.connect(self.data_has_been_changed)
         self.cancel_btn.clicked.connect(self.close)
         self.save_btn.clicked.connect(self.save_changes)
 
-    def close_app(self):
+    def closeEvent(self, event):
+        if self.email_window is not None: self.email_window.close()
         self.close()
-
-
-    def data_has_been_changed(self):
-        modified_row = self.table.currentRow()
-        row_contents = []
-
-        for col in range(0, self.table.columnCount()):
-            text = str(self.table.item(modified_row, col).text())
-            row_contents.append(text)
-
-        is_row_changed = sum(i != j for i, j in zip(row_contents, self.data[modified_row])) > 0
-        self.modified_rows[modified_row] = is_row_changed
-
-    def read_csv_file(self):
-        tasks = []
-        with open(self.csv_file, 'rb') as csvfile:
-            file_reader = csv.reader(csvfile, delimiter=',')
-            for row in file_reader:
-                tasks.append(row)
-        return tasks
 
     def setup_table(self):
         tasks = self.read_csv_file()
@@ -65,7 +44,6 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
         number_of_columns = len(tasks[0])
         number_of_tasks = len(tasks) - 1
-        self.modified_rows = [False] * number_of_tasks
         self.table.setRowCount(number_of_tasks)
 
         for row in range(1, number_of_tasks + 1):
@@ -85,15 +63,22 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         self.write_to_csv_file()
         self.send_email()
 
+    def read_csv_file(self):
+        tasks = []
+        with open(self.csv_file, 'rb') as csvfile:
+            file_reader = csv.reader(csvfile, delimiter=',')
+            for row in file_reader:
+                tasks.append(row)
+        return tasks
+
+
     def write_to_csv_file(self):
         data = self.get_data_from_table()
         headers = ['Asset Name','Owner','Status','Notes','Due Date','Requester']
         data.insert(0, headers)
-        with open(self.target_file, 'wb') as f:
+        with open(self.csv_file, 'wb') as f:
             writer = csv.writer(f)
             writer.writerows(data)
-
-
 
     def get_data_from_table(self):
         data = []
@@ -111,8 +96,8 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
 
     def send_email(self):
-        self.newWindow = emailWindow()
-        self.newWindow.show()
+        self.email_window = emailWindow()
+        self.email_window.show()
 
 class emailWindow(QtGui.QMainWindow, email_window.Ui_sendEmail):
     def __init__(self):
@@ -125,7 +110,18 @@ class emailWindow(QtGui.QMainWindow, email_window.Ui_sendEmail):
         self.dont_send_btn.clicked.connect(self.close)
 
     def send_email(self):
-        print "We sent the following email."
+        subject =  self.subject_text.text()
+        recipient = self.recipient_text.text()
+        message = self.message_body.toPlainText()
+        string = (  "=====================\n"
+                    "From: mail.service@company.company\n"
+                    "To: %s\n"
+                    "Subject: %s\n\n"
+                    "Message:\n"
+                    "%s\n"
+                    "=====================\n" % (recipient, subject, message))
+        print string
+        self.close()
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
