@@ -1,6 +1,6 @@
 from PyQt4 import QtCore, QtGui  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
-import task_viewer, email_window  # This file holds our MainWindow and all design related things
+import task_viewer, email_window2  # This file holds our MainWindow and all design related things
 import csv
 from operator import itemgetter
 # it also keeps events etc that we defined in Qt Designer
@@ -29,13 +29,11 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
 
     def setup_connections(self):
-        self.table.cellChanged.connect(self.data_has_been_changed)
         self.cancel_btn.clicked.connect(self.close)
         self.save_btn.clicked.connect(self.save_changes)
 
     def closeEvent(self, event):
-        if self.email_window is not None: self.email_window.close()
-        self.close()
+        sys.exit(0)
 
     def setup_table(self):
         tasks = self.read_csv_file()
@@ -84,6 +82,7 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         data = []
         row_data = []
         num_of_rows = self.table.rowCount()
+        print num_of_rows
         num_of_cols = self.table.columnCount()
 
         for row in range(0, num_of_rows):
@@ -96,18 +95,23 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
 
     def send_email(self):
-        self.email_window = emailWindow()
+        self.email_window = emailWindow(self)
         self.email_window.show()
+        self.save_btn.setEnabled(False)
 
-class emailWindow(QtGui.QMainWindow, email_window.Ui_sendEmail):
-    def __init__(self):
+    def enable_save_button(self):
+        self.save_btn.setEnabled(True)
+
+class emailWindow(QtGui.QDialog, email_window2.Ui_SendEmail):
+    def __init__(self, parent):
         super(self.__class__, self).__init__()
+        self.parent = parent
         self.setupUi(self)
         self.setup_connections()
 
     def setup_connections(self):
         self.send_btn.clicked.connect(self.send_email)
-        self.dont_send_btn.clicked.connect(self.close)
+        self.cancel_btn.clicked.connect(self.close)
 
     def send_email(self):
         subject =  self.subject_text.text()
@@ -121,7 +125,11 @@ class emailWindow(QtGui.QMainWindow, email_window.Ui_sendEmail):
                     "%s\n"
                     "=====================\n" % (recipient, subject, message))
         print string
+        self.parent.email_window = None
         self.close()
+
+    def closeEvent(self, event):
+        self.parent.enable_save_button()
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
