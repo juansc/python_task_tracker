@@ -14,6 +14,11 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+class ComboBoxNoWheel(QtGui.QComboBox):
+    def wheelEvent (self, event):
+        event.ignore()
+
+
 
 class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
     def __init__(self):
@@ -34,11 +39,13 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         self.table.cellChanged.connect(self.update_table_and_notify)
 
     def update_table_and_notify(self):
+        print "Original row was %i" %self.table.item(self.table.currentRow(),0).originalRow
         self.write_to_csv_file()
         self.send_notification()
 
     def send_notification(self):
         row = self.table.currentRow()
+        print "Current row is %i" % row
         recipient = str(self.table.item(row, 2).text())
         subject = "Task for Asset \'%s\' Changed" % str(self.table.item(row, 0).text())
         email_string = (  "=====================\n"
@@ -79,13 +86,14 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         for row in range(1, number_of_tasks + 1):
             for col in range(0, number_of_columns):
                 item = QtGui.QTableWidgetItem()
+                item.originalRow = row - 1
                 self.table.setItem(row - 1, col, item)
                 item.setText(_translate("MainWindow", tasks[row][col], None))
 
     def add_drop_down_cells_for_col(self, column, values):
         number_of_tasks = self.table.rowCount()
         for row in range(0, number_of_tasks):
-            combo = QtGui.QComboBox()
+            combo = ComboBoxNoWheel()
             for value in values:
                 combo.addItem(value)
 

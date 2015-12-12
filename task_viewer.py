@@ -25,13 +25,13 @@ except AttributeError:
 class Ui_taskViewer(object):
     def setupUi(self, taskViewer):
         taskViewer.setObjectName(_fromUtf8("taskViewer"))
-        taskViewer.resize(1117, 645)
+        taskViewer.resize(1099, 565)
         taskViewer.setMinimumSize(QtCore.QSize(869, 300))
         taskViewer.setMaximumSize(QtCore.QSize(10000, 10000))
         self.centralwidget = QtGui.QWidget(taskViewer)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.table = QtGui.QTableWidget(self.centralwidget)
-        self.table.setGeometry(QtCore.QRect(40, 30, 1031, 192))
+        self.table.setGeometry(QtCore.QRect(40, 20, 1031, 481))
         self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.table.setRowCount(0)
@@ -58,10 +58,10 @@ class Ui_taskViewer(object):
         self.table.verticalHeader().setVisible(False)
         self.table.verticalHeader().setCascadingSectionResizes(False)
         self.cancel_btn = QtGui.QPushButton(self.centralwidget)
-        self.cancel_btn.setGeometry(QtCore.QRect(610, 530, 113, 32))
+        self.cancel_btn.setGeometry(QtCore.QRect(850, 520, 113, 32))
         self.cancel_btn.setObjectName(_fromUtf8("cancel_btn"))
         self.save_btn = QtGui.QPushButton(self.centralwidget)
-        self.save_btn.setGeometry(QtCore.QRect(720, 530, 113, 32))
+        self.save_btn.setGeometry(QtCore.QRect(960, 520, 113, 32))
         self.save_btn.setObjectName(_fromUtf8("save_btn"))
         taskViewer.setCentralWidget(self.centralwidget)
 
@@ -83,6 +83,6 @@ class Ui_taskViewer(object):
         item.setText(_translate("taskViewer", "Status", None))
         item = self.table.horizontalHeaderItem(5)
         item.setText(_translate("taskViewer", "Notes", None))
-        self.cancel_btn.setText(_translate("taskViewer", "Cancel", None))
-        self.save_btn.setText(_translate("taskViewer", "Save", None))
+        self.cancel_btn.setText(_translate("taskViewer", "Close", None))
+        self.save_btn.setText(_translate("taskViewer", "Send Email", None))
 
