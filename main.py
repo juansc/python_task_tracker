@@ -99,16 +99,13 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
             if currentVal in values:
                 combo.setCurrentIndex(combo.findText(currentVal))
 
-
-            def add_changed_signal_to_row(x):
-                return lambda : self.set_current_table_cell(x)
-
-            combo.currentIndexChanged.connect(add_changed_signal_to_row(row))
-
+            combo.container = self.table.item(row, column)
+            combo.currentIndexChanged.connect(self.set_current_table_cell)
             self.table.setCellWidget(row, column,combo)
 
-    def set_current_table_cell(self, row):
-        self.table.setCurrentCell(row, 0)
+    def set_current_table_cell(self):
+        current_row = self.sender().container.row()
+        self.table.setCurrentCell(current_row, 0)
         self.update_table_and_notify()
 
     def save_changes(self):

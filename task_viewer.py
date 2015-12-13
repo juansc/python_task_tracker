@@ -32,6 +32,7 @@ class Ui_taskViewer(object):
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.table = QtGui.QTableWidget(self.centralwidget)
         self.table.setGeometry(QtCore.QRect(40, 20, 1031, 481))
+        self.table.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.table.setAutoFillBackground(False)
         self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
@@ -60,6 +61,7 @@ class Ui_taskViewer(object):
         self.table.verticalHeader().setCascadingSectionResizes(False)
         self.cancel_btn = QtGui.QPushButton(self.centralwidget)
         self.cancel_btn.setGeometry(QtCore.QRect(960, 520, 113, 32))
+        self.cancel_btn.setMouseTracking(False)
         self.cancel_btn.setObjectName(_fromUtf8("cancel_btn"))
         taskViewer.setCentralWidget(self.centralwidget)
 
@@ -68,7 +70,7 @@ class Ui_taskViewer(object):
 
     def retranslateUi(self, taskViewer):
         taskViewer.setWindowTitle(_translate("taskViewer", "Task Viewer", None))
-        self.table.setSortingEnabled(False)
+        self.table.setSortingEnabled(True)
         item = self.table.horizontalHeaderItem(0)
         item.setText(_translate("taskViewer", "Asset Name", None))
         item = self.table.horizontalHeaderItem(1)
