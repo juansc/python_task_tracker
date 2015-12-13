@@ -22,7 +22,7 @@ class ComboBoxNoWheel(QtGui.QComboBox):
 
 class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
     def __init__(self):
-        data = []
+        self.data = []
         self.csv_file = 'tool_files.csv'
         self.email_window = None
 
@@ -35,15 +35,55 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
     def setup_connections(self):
         self.cancel_btn.clicked.connect(self.close)
-        #self.save_btn.clicked.connect(self.save_changes)
         self.table.cellChanged.connect(self.update_table_and_notify)
 
     def update_table_and_notify(self):
-        self.write_to_csv_file()
         self.send_notification()
+        self.update_data()
+        self.write_to_csv_file()
+
+    def update_data(self):
+        status_col = 4
+        row = self.table.currentRow()
+        original_row = self.table.item(row, 0).original_row
+        num_of_rows = self.table.columnCount()
+        for col in range(0, num_of_rows):
+            if col == status_col:
+                self.data[original_row][col] = str(self.table.cellWidget(row, col).currentText())
+            else:
+                self.data[original_row][col] = str(self.table.item(row, col).text())
+        print self.data
 
     def send_notification(self):
+        status_col, notes_col = 4, 5
+
         row = self.table.currentRow()
+        original_row = self.table.item(row, 0).original_row
+        num_of_rows = self.table.columnCount()
+
+        current_row_data = []
+
+        for col in range(0, num_of_rows):
+            if col == status_col:
+                current_row_data.append(str(self.table.cellWidget(row, col).currentText()))
+            else:
+                current_row_data.append(str(self.table.item(row, col).text()))
+
+        print current_row_data
+
+        prev_status = self.data[original_row][status_col]
+        new_status = current_row_data[status_col]
+        prev_notes = self.data[original_row][notes_col]
+        new_notes = current_row_data[notes_col]
+
+        message = ""
+
+        if prev_status != new_status:
+            message += "Status changed from '%s' to '%s'\n" % (prev_status, new_status)
+        if prev_notes != new_notes:
+            message += "Notes changed from '%s' to '%s'\n" % (prev_notes, new_notes)
+
+
         recipient = str(self.table.item(row, 2).text())
         subject = "Task for Asset \'%s\' Changed" % str(self.table.item(row, 0).text())
         email_string = (  "=====================\n"
@@ -51,8 +91,8 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
                     "To: %s@company.com\n"
                     "Subject: %s\n"
                     "Message:\n"
-                    "Information for your asset has changed.\n"
-                    "=====================\n" % (recipient, subject))
+                    "%s"
+                    "=====================\n" % (recipient, subject, message))
         print email_string
 
     def closeEvent(self, event):
@@ -84,7 +124,7 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         for row in range(1, number_of_tasks + 1):
             for col in range(0, number_of_columns):
                 item = QtGui.QTableWidgetItem()
-                item.originalRow = row - 1
+                item.original_row = row - 1
                 self.table.setItem(row - 1, col, item)
                 item.setText(_translate("MainWindow", tasks[row][col], None))
 
@@ -122,8 +162,8 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
 
     def write_to_csv_file(self):
-        data = self.get_data_from_table()
-        headers = ['Asset Name', 'Owner', 'Status', 'Notes', 'Due Date', 'Requester']
+        data = list(self.data)
+        headers = ['Asset Name', 'Assigned To', 'Requester', 'Due Date', 'Status', 'Notes']
         data.insert(0, headers)
         with open(self.csv_file, 'wb') as f:
             writer = csv.writer(f)
