@@ -59,11 +59,8 @@ class Ui_taskViewer(object):
         self.table.verticalHeader().setVisible(False)
         self.table.verticalHeader().setCascadingSectionResizes(False)
         self.cancel_btn = QtGui.QPushButton(self.centralwidget)
-        self.cancel_btn.setGeometry(QtCore.QRect(850, 520, 113, 32))
+        self.cancel_btn.setGeometry(QtCore.QRect(960, 520, 113, 32))
         self.cancel_btn.setObjectName(_fromUtf8("cancel_btn"))
-        self.save_btn = QtGui.QPushButton(self.centralwidget)
-        self.save_btn.setGeometry(QtCore.QRect(960, 520, 113, 32))
-        self.save_btn.setObjectName(_fromUtf8("save_btn"))
         taskViewer.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(taskViewer)
@@ -85,5 +82,4 @@ class Ui_taskViewer(object):
         item = self.table.horizontalHeaderItem(5)
         item.setText(_translate("taskViewer", "Notes", None))
         self.cancel_btn.setText(_translate("taskViewer", "Close", None))
-        self.save_btn.setText(_translate("taskViewer", "Send Email", None))
 

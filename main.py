@@ -35,17 +35,15 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
 
     def setup_connections(self):
         self.cancel_btn.clicked.connect(self.close)
-        self.save_btn.clicked.connect(self.save_changes)
+        #self.save_btn.clicked.connect(self.save_changes)
         self.table.cellChanged.connect(self.update_table_and_notify)
 
     def update_table_and_notify(self):
-        print "Original row was %i" %self.table.item(self.table.currentRow(),0).originalRow
         self.write_to_csv_file()
         self.send_notification()
 
     def send_notification(self):
         row = self.table.currentRow()
-        print "Current row is %i" % row
         recipient = str(self.table.item(row, 2).text())
         subject = "Task for Asset \'%s\' Changed" % str(self.table.item(row, 0).text())
         email_string = (  "=====================\n"
@@ -153,9 +151,6 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
         self.email_window = emailWindow(self)
         self.email_window.exec_()
 
-    def enable_save_button(self):
-        self.save_btn.setEnabled(True)
-
 class emailWindow(QtGui.QDialog, email_window.Ui_SendEmail):
     def __init__(self, parent):
         super(self.__class__, self).__init__()
@@ -182,8 +177,6 @@ class emailWindow(QtGui.QDialog, email_window.Ui_SendEmail):
         self.parent.email_window = None
         self.close()
 
-    def closeEvent(self, event):
-        self.parent.enable_save_button()
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
