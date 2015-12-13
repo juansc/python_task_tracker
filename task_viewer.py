@@ -32,6 +32,7 @@ class Ui_taskViewer(object):
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.table = QtGui.QTableWidget(self.centralwidget)
         self.table.setGeometry(QtCore.QRect(40, 20, 1031, 481))
+        self.table.setAutoFillBackground(False)
         self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.table.setRowCount(0)
@@ -70,7 +71,7 @@ class Ui_taskViewer(object):
 
     def retranslateUi(self, taskViewer):
         taskViewer.setWindowTitle(_translate("taskViewer", "Task Viewer", None))
-        self.table.setSortingEnabled(True)
+        self.table.setSortingEnabled(False)
         item = self.table.horizontalHeaderItem(0)
         item.setText(_translate("taskViewer", "Asset Name", None))
         item = self.table.horizontalHeaderItem(1)
