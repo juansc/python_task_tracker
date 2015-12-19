@@ -52,7 +52,6 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
                 self.data[original_row][col] = str(self.table.cellWidget(row, col).currentText())
             else:
                 self.data[original_row][col] = str(self.table.item(row, col).text())
-        print self.data
 
     def send_notification(self):
         status_col, notes_col = 4, 5
@@ -68,8 +67,6 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
                 current_row_data.append(str(self.table.cellWidget(row, col).currentText()))
             else:
                 current_row_data.append(str(self.table.item(row, col).text()))
-
-        print current_row_data
 
         prev_status = self.data[original_row][status_col]
         new_status = current_row_data[status_col]
@@ -187,32 +184,6 @@ class taskNotification(QtGui.QMainWindow, task_viewer.Ui_taskViewer):
     def send_email(self):
         self.email_window = emailWindow(self)
         self.email_window.exec_()
-
-class emailWindow(QtGui.QDialog, email_window.Ui_SendEmail):
-    def __init__(self, parent):
-        super(self.__class__, self).__init__()
-        self.parent = parent
-        self.setupUi(self)
-        self.setup_connections()
-
-    def setup_connections(self):
-        self.send_btn.clicked.connect(self.accept)
-        self.cancel_btn.clicked.connect(self.reject)
-
-    def send_email(self):
-        subject =  self.subject_text.text()
-        recipient = self.recipient_text.text()
-        message = self.message_body.toPlainText()
-        string = (  "=====================\n"
-                    "From: mail.service@company.company\n"
-                    "To: %s\n"
-                    "Subject: %s\n\n"
-                    "Message:\n"
-                    "%s\n"
-                    "=====================\n" % (recipient, subject, message))
-        print string
-        self.parent.email_window = None
-        self.close()
 
 
 def main():
